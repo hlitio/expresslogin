@@ -9,7 +9,7 @@ const router = express.Router();
  * @swagger
  * /register:
  *   post:
- *     summary: Crear un nuevo usuario
+ *     summary: Crear un nuevo usuario y envia un codigo de verificación
  *     requestBody:
  *       required: true
  *       content:
@@ -37,7 +37,7 @@ router.post('/register', userController.registerUser);
  * @swagger
  * /validate:
  *   post:
- *     summary: Validar si un usuario existe
+ *     summary: Valida el usuario mediante el codigo emitido por correo electronico al registrarse.
  *     requestBody:
  *       required: true
  *       content:
@@ -47,11 +47,19 @@ router.post('/register', userController.registerUser);
  *             properties:
  *               username:
  *                 type: string
+ *                 example: "info@odin.com"
+ *               verificationCode:
+ *                 type: string
+ *                 example: "20caracteresaleatorios"
  *     responses:
  *       200:
- *         description: Usuario válido
+ *         description: Usuario verificado con éxito
+ *       400:
+ *         description: Código de verificación ha expirado o campos obligatorios faltantes
  *       404:
- *         description: Usuario no encontrado
+ *         description: Usuario no encontrado o código de verificación incorrecto
+ *       500:
+ *         description: Error al validar usuario
  */
 router.post('/validate', userController.validateUser);
 

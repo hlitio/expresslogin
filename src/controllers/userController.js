@@ -54,7 +54,7 @@ const registerUser = async (req, res) => {
         pass: process.env.EMAIL_PASS
       }
     });
-    console.log("Correo: ", process.env.EMAIL_USER,)
+    
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: username,
@@ -71,16 +71,32 @@ const registerUser = async (req, res) => {
 };
 
 const validateUser = async (req, res) => {
-  const { username } = req.body;
+  const { username, verificationCode } = req.body;
+
+  // Validación de campos vacíos
+  if (!username || !verificationCode) {
+    return res.status(400).json({ message: 'Los campos de nombre de usuario y código de verificación son obligatorios' });
+  }
 
   try {
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({ where: { username, verification_code: verificationCode } });
 
-    if (user) {
-      return res.status(200).json({ message: 'Usuario válido' });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado o código de verificación incorrecto' });
     }
 
-    res.status(404).json({ message: 'Usuario no encontrado' });
+    // Verificar si el código ha expirado
+    if (user.verification_expires_at < new Date()) {
+      return res.status(400).json({ message: 'El código de verificación ha expirado' });
+    }
+
+    // Actualizar el estado del usuario a verificado
+    user.is_verified = true;
+    user.verification_code = null; // Limpiar el código de verificación
+    user.verification_expires_at = null;
+    await user.save();
+
+    res.status(200).json({ message: 'Usuario verificado con éxito' });
   } catch (error) {
     res.status(500).json({ message: 'Error al validar usuario', error });
   }
