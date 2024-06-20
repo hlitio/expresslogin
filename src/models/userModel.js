@@ -1,37 +1,59 @@
 // src/models/userModel.js
 
-let users = [];
-let loggedInUsers = [];
+const { DataTypes } = require('sequelize');
+const sequelize = require('./index');
 
-const getAllUsers = () => users;
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  username: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+  password_hash: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  date_created: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+  last_login: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  is_active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+  },
+  date_deactivated: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  verification_code: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  verification_expires_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  is_verified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  login_attempts: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+}, {
+  tableName: 'users',
+  timestamps: false,
+});
 
-const addUser = (user) => {
-  users.push(user);
-};
-
-const findUser = (username) => users.find(user => user.username === username);
-
-const findUserByUsernameAndPassword = (username, password) =>
-  users.find(user => user.username === username && user.password === password);
-
-const removeUser = (username) => {
-  users = users.filter(user => user.username !== username);
-};
-
-const addLoggedInUser = (username) => {
-  loggedInUsers.push(username);
-};
-
-const removeLoggedInUser = (username) => {
-  loggedInUsers = loggedInUsers.filter(user => user !== username);
-};
-
-module.exports = {
-  getAllUsers,
-  addUser,
-  findUser,
-  findUserByUsernameAndPassword,
-  removeUser,
-  addLoggedInUser,
-  removeLoggedInUser,
-};
+module.exports = User;

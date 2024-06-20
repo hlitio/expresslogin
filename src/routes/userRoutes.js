@@ -19,13 +19,17 @@ const router = express.Router();
  *             properties:
  *               username:
  *                 type: string
+ *                 example: "info@odin.com"
  *               password:
  *                 type: string
+ *                 example: "Inf0m@cion_2024"
  *     responses:
  *       201:
  *         description: Usuario creado
  *       400:
- *         description: Usuario ya existe
+ *         description: Usuario ya existe o datos inválidos
+ *       500:
+ *         description: Error al crear usuario
  */
 router.post('/register', userController.registerUser);
 

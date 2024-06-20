@@ -9,11 +9,11 @@ const swaggerOptions = {
     info: {
       title: 'User Management API',
       version: '1.0.0',
-      description: 'API para gestionar usuarios',
+      description: 'API for user management',
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:3000/api/users',
       },
     ],
   },
