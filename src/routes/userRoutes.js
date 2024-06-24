@@ -67,7 +67,7 @@ router.post('/validate', userController.validateUser);
  * @swagger
  * /login:
  *   post:
- *     summary: Iniciar sesión
+ *     summary: Iniciar sesión con un usuario existente
  *     requestBody:
  *       required: true
  *       content:
@@ -77,13 +77,23 @@ router.post('/validate', userController.validateUser);
  *             properties:
  *               username:
  *                 type: string
+ *                 example: "info@odin.com"
  *               password:
  *                 type: string
+ *                 example: "password123"
  *     responses:
  *       200:
  *         description: Login exitoso
  *       401:
- *         description: Credenciales inválidas
+ *         description: Credenciales inválidas o demasiados intentos de login
+ *       403:
+ *         description: Usuario desactivado o no verificado
+ *       404:
+ *         description: Usuario no encontrado
+ *       429:
+ *         description: Demasiados intentos. Por favor, inténtalo de nuevo más tarde.
+ *       500:
+ *         description: Error al realizar el login
  */
 router.post('/login', userController.loginUser);
 

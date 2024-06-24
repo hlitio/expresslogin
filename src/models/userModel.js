@@ -51,6 +51,10 @@ const User = sequelize.define('User', {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
+  last_try_login: {
+    type: DataTypes.DATE,
+    allowNull: true
+  }
 }, {
   tableName: 'users',
   timestamps: false,
